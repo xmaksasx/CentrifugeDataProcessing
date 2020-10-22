@@ -41,7 +41,7 @@ namespace CentrifugeDataProcessing
 
 
 
-                Parallel.ForEach(_ilst, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, d => { Simulation(d); });
+              //  Parallel.ForEach(_ilst, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, d => { Simulation(d); });
 
 
 
