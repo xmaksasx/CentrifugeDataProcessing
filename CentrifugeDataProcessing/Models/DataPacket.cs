@@ -29,8 +29,8 @@ namespace CentrifugeDataProcessing.Models
         float EKG4; // ЭКГ 4
         float EKG5; // ЭКГ 5
         float EKGR; // ЭКГ R
-        public float PAD;
-        public float PADU;
+        public float PAD; //может быть давление странные значения
+        public float PADU; //может быть давлениестранные значения
         public float FPGP; // ФПГ пальца
         public float FPGU; // ФПГ уха
         public float TO; // Тахоосцилляция
@@ -46,9 +46,9 @@ namespace CentrifugeDataProcessing.Models
         public int CD; // Частота дыхания
         public float ADS; // ушное давление но это не точно
         int ADSIzmPos;
-        public float ADD; //
+        public float ADD; //давление
         int ADDIzmPos;
-        public float ADU;
+        public float ADU;//давление
         int ADUIzmPos;
         byte Tangenta; // Тангента, нажата/отпущена
         public double Time; // Дата/время текущего пакета

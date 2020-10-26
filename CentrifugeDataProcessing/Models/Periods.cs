@@ -16,20 +16,17 @@ namespace CentrifugeDataProcessing.Models
 
         public void CalcAvg()
         {
-            Rise.AvgCSS = (int)GetAvgCss(Rise.Data);
-            Rise.AvgCD = (int)GetAvgCD(Rise.Data);
+            GetAverage(Rise);
+            GetAverage(Platform);
+            GetAverage(Descent);
+            GetAverage(FirstMinute);
+            GetAverage(LastMinute);
 
-            Platform.AvgCSS = (int)GetAvgCss(Platform.Data);
-            Platform.AvgCD = (int)GetAvgCD(Platform.Data);
-
-            Descent.AvgCSS = (int)GetAvgCss(Descent.Data);
-            Descent.AvgCD = (int)GetAvgCD(Descent.Data);
-
-            FirstMinute.AvgCSS = (int)GetAvgCss(FirstMinute.Data);
-            FirstMinute.AvgCD = (int)GetAvgCD(FirstMinute.Data);
-
-            LastMinute.AvgCSS = (int)GetAvgCss(LastMinute.Data);
-            LastMinute.AvgCD = (int)GetAvgCD(LastMinute.Data);
+            GetMedian(Rise);
+            GetMedian(Platform);
+            GetMedian(Descent);
+            GetMedian(FirstMinute);
+            GetMedian(LastMinute);
 
             Rise.Data = null;
             Platform.Data = null;
@@ -38,21 +35,67 @@ namespace CentrifugeDataProcessing.Models
             LastMinute.Data = null;
         }                                                          
 
-        public double GetAvgCss(List<DataPacket> Data)
+        public void GetMedian(Interval interval)
         {
-            List<double> lst = new List<double>();
-            foreach (var item in Data)
-                lst.Add(item.CSS);
-            return lst.Median();
+            List<double> lstCss = new List<double>();
+            List<double> lstCd = new List<double>();
+            List<double> lstAds = new List<double>();
+            List<double> lstAdu = new List<double>();
+            List<double> lstAdd = new List<double>();
+
+            foreach (var item in interval.Data)
+            {
+                lstCss.Add(item.CSS);
+                lstCd.Add(item.CD);
+                lstAds.Add(item.ADS);
+                lstAdu.Add(item.ADU);
+                lstAdd.Add(item.ADD);
+            }
+            interval.MedianCss = (int)lstCss.Median();
+            interval.MedianCd = (int)lstCd.Median();
+            interval.MedianAds = (int)lstAds.Median();
+            interval.MedianAdu = (int)lstAdu.Median();
+            interval.MedianAdd = (int)lstAdd.Median();
+
+            lstCss = null;
+            lstCd = null;
+            lstAds = null;
+            lstAdu = null;
+            lstAdd = null;
         }
 
-        public double GetAvgCD(List<DataPacket> Data)
+
+        public void GetAverage(Interval interval)
         {
-            List<double> lst = new List<double>();
-            foreach (var item in Data)
-                lst.Add(item.CD);
-            return lst.Median();
+            List<double> lstCss = new List<double>();
+            List<double> lstCd = new List<double>();
+            List<double> lstAds = new List<double>();
+            List<double> lstAdu = new List<double>();
+            List<double> lstAdd = new List<double>();
+
+            foreach (var item in interval.Data)
+            {
+                lstCss.Add(item.CSS);
+                lstCd.Add(item.CD);
+                lstAds.Add(item.PADU);
+                lstAdu.Add(item.ADU);
+                lstAdd.Add(item.ADD);
+            }
+            interval.AvgCss = (int)lstCss.Average();
+            interval.AvgCd = (int)lstCd.Average();
+            interval.AvgAds = (int)lstAds.Average();
+            interval.AvgAdu = (int)lstAdu.Average();
+            interval.AvgAdd = (int)lstAdd.Average();
+
+            lstCss = null;
+            lstCd = null;
+            lstAds = null;
+            lstAdu = null;
+            lstAdd = null;
         }
+
+     
+
 
 
     }
@@ -75,5 +118,15 @@ namespace CentrifugeDataProcessing.Models
             return median;
         }
 
+        public static double Average(this IEnumerable<double> sourceNumbers)
+        {
+            var enumerable = sourceNumbers as double[] ?? sourceNumbers.ToArray();
+            if (!enumerable.Any())
+                return 0;
+            int count = enumerable.Count();
+            double sum = enumerable.Sum();
+            
+            return sum / count;
+        }
     }
 }

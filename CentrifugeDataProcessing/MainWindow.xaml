@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CentrifugeDataProcessing"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     Title="MainWindow"
     Width="400"
     Height="500"
@@ -21,9 +22,9 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="18"
-                
+                Foreground="{StaticResource PrimaryHueDarkForegroundBrush}"
                 Text="Обработка данных" />
-            <!--Foreground="{StaticResource PrimaryHueDarkForegroundBrush}"-->
+
             <Button
                 Width="30"
                 Height="30"
@@ -31,13 +32,13 @@
                 Padding="0"
                 Click="Close_OnClick"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Center">
-                <!--Style="{StaticResource MaterialDesignFlatButton}">
+                VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignFlatButton}">
 
                 <materialDesign:PackIcon
                     Width="30"
                     Height="30"
-                    Kind="Close" />-->
+                    Kind="Close" />
             </Button>
         </Grid>
         <ListBox

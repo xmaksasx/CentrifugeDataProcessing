@@ -20,7 +20,7 @@ namespace CentrifugeDataProcessing
         async void load()
         {
             var b = DateTime.Now;
-            await Task.Run(() => LoadUsers());
+            await Task.Run(LoadUsers);
             var e = DateTime.Now;
             var hh = (e - b).TotalSeconds;
             LstTesters.ItemsSource = lst;

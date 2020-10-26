@@ -5,9 +5,9 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <!--<ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/materialdesigntheme.defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#349fda" />
             <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FF333333" />
@@ -17,7 +17,7 @@
             <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFFFF" />
 
             <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#FF50F350" />
-            <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#FFFFFF" />-->
+            <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#FFFFFF" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

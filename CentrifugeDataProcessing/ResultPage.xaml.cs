@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using CentrifugeDataProcessing.Annotations;
 using CentrifugeDataProcessing.Models;
 
 
@@ -23,196 +29,148 @@ namespace CentrifugeDataProcessing
     {
         private readonly List<FileCentrifugeInfo> _ilst;
         private List<Nigger> _niggers;
-        List<MyTable> result = new List<MyTable>();
+        List<string> result = new List<string>();
         List<foo> fooresult = new List<foo>();
+
 
         public ResultPage(IList ilst)
         {
             _ilst = ilst.Cast<FileCentrifugeInfo>().ToList();
             _niggers = new List<Nigger>();
             InitializeComponent();
-            ProgressLoad.Maximum = ilst.Count;
-            //  for (int i = 0; i < _ilst.Count; i++)
-             //     Simulation(_ilst[i]);
-            //  Thread simThread = new Thread(new ThreadStart(Simulation));
-            // simThread.IsBackground = true;
-            // simThread.Start();
-
-
-
-
-              //  Parallel.ForEach(_ilst, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, d => { Simulation(d); });
-
-
-
-            //var myEntities = _ilst;
-            //var maxThreads = 300;
-
-
-            //var semaphoreSlim = new SemaphoreSlim(maxThreads);
-            //var tasks = new List<Task>(myEntities.Count);
-            //foreach (var entity in myEntities)
-            //{
-            //    tasks.Add(Task.Run(() =>
-            //    {
-            //        semaphoreSlim.Wait();
-            //        try
-            //        {
-            //            Simulation(entity);
-            //        }
-            //        finally
-            //        {
-            //            semaphoreSlim.Release();
-            //        }
-            //    }));
-            //}
-
-            //Task.WaitAll(tasks.ToArray());
+            ProgressLoad.Maximum = ilst.Count-1;
+            ProgressDEvent += ProgressDE;
+            Task.Run(() => Parallel.ForEach(_ilst, new ParallelOptions() { MaxDegreeOfParallelism = 20 }, d => { Simulation(d); }));
+         
 
         }
 
-        class MyTable
+        private void ProgressDE(int idx)
         {
-            public MyTable(string ModeName, string Css, string Cd)
+
+            double max = 0;
+            double val = 0;
+
+            Dispatcher.Invoke(() => val = ProgressLoad.Value++);
+            Dispatcher.Invoke(() => max = ProgressLoad.Maximum);
+            Dispatcher.Invoke(() => MaximumFile.Text = ProgressLoad.Maximum.ToString());
+            Dispatcher.Invoke(() => CurrentFile.Text = ProgressLoad.Value.ToString());
+
+            if (val == max)
             {
-                this.ModeName = ModeName;
-                this.Css = Css;
-                this.Cd = Cd;
-
+                Dispatcher.Invoke(() => ProgressGrid.Visibility = Visibility.Hidden);
+                Dispatcher.Invoke(() => GridProducts.ItemsSource = fooresult);
             }
-
-            public string ModeName { get; set; }
-            public string Css { get; set; }
-            public string Cd { get; set; }
         }
 
-        class foo
+
+        class foo 
         {
             public string NamePilot { get; set; }
-            public List<MyTable> G3 { get; set; } = new List<MyTable>();
-            public List<MyTable> G5 { get; set; } = new List<MyTable>();
-            public List<MyTable> G6 { get; set; } = new List<MyTable>();
+            public string PathFile { get; set; }
+            public List<Interval> G3 { get; set; } = new List<Interval>();
+            public List<Interval> G5 { get; set; } = new List<Interval>();
+            public List<Interval> G6 { get; set; } = new List<Interval>();
         }
 
-
-
-        private async void Simulation(FileCentrifugeInfo file)
+        private void Simulation(FileCentrifugeInfo file)
         {
-            //async
-                 await Task.Run(() =>
-                 {
-                 CultureInfo culture = CultureInfo.InvariantCulture;
-                if (File.Exists(file.Path))
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            if (File.Exists(file.Path))
+            {
+                var nigger = new Nigger() {Name = file.Name};
+                _niggers.Add(nigger);
+
+                DateTime dateTime = DateTime.Now;
+
+                var bytes = File.ReadAllBytes(file.Path);
+                var len = bytes.Length;
+                var pos = GetPos(bytes);
+                for (long ix = pos; ix < len; ix += 1440)
                 {
-                    var nigger = new Nigger() {Name = file.Name};
-                    _niggers.Add(nigger);
+                    byte[] data = new byte[144];
+                    DataPacket packet = new DataPacket();
+                    Array.Copy(bytes, ix, data, 0, 144);
 
-                    DateTime dateTime = DateTime.Now;
-
-                    var bytes = File.ReadAllBytes(file.Path);
-                    var len = bytes.Length;
-                    var pos = GetPos(bytes);
-                    for (long ix = pos; ix < len; ix += 1440)
-                    {
-                        byte[] data = new byte[144];
-                        DataPacket packet = new DataPacket();
-                        Array.Copy(bytes, ix, data, 0, 144);
-
-                        ByteToObject(data, packet);
-                        dateTime = DateTime.FromOADate(packet.Time);
-                        if (packet.G > 2.8 && packet.G < 3.1)
-                            FindIntervals3(nigger.Period3, packet);
-                        if (packet.G > 4.8 && packet.G < 5.1)
-                            FindIntervals5(nigger.Period5, nigger.Period3, packet);
-                        if (packet.G > 5.8 && packet.G < 6.1)
-                            FindIntervals6(nigger.Period6, nigger.Period5, packet);
-                    }
-
-
-                    for (long ix = pos; ix < len; ix += 288)
-                    {
-                        byte[] data = new byte[144];
-                        DataPacket packet = new DataPacket();
-                        Array.Copy(bytes, ix, data, 0, 144);
-                        ByteToObject(data, packet);
-                        dateTime = DateTime.FromOADate(packet.Time);
-                        AddPacketToInterval(nigger.Period3, packet, dateTime);
-                        AddPacketToInterval(nigger.Period5, packet, dateTime);
-                        AddPacketToInterval(nigger.Period6, packet, dateTime);
-                    }
-
-                    bytes = null;
-                    double max = 0;
-                    double val = 0;
-                    Dispatcher.Invoke(() => val = ProgressLoad.Value++);
-                    Dispatcher.Invoke(() => max = ProgressLoad.Maximum);
-                    nigger.Period3.CalcAvg();
-                    nigger.Period5.CalcAvg();
-                    nigger.Period6.CalcAvg();
-
-                    List<MyTable> result3 = new List<MyTable>();
-                    List<MyTable> result5 = new List<MyTable>();
-                    List<MyTable> result6 = new List<MyTable>();
-
-
-
-                    // result6.Add(new MyTable(file.Name, "ЧСС", "Дыхание"));
-                    result3.Add(new MyTable("Набор", nigger.Period3.Rise.AvgCSS.ToString(),
-                        nigger.Period3.Rise.AvgCD.ToString()));
-                    result3.Add(new MyTable("Площадка", nigger.Period3.Platform.AvgCSS.ToString(),
-                        nigger.Period3.Platform.AvgCD.ToString()));
-                    result3.Add(new MyTable("Спуск", nigger.Period3.Descent.AvgCSS.ToString(),
-                        nigger.Period3.Descent.AvgCD.ToString()));
-                    result3.Add(new MyTable("Первая минута", nigger.Period3.FirstMinute.AvgCSS.ToString(),
-                        nigger.Period3.FirstMinute.AvgCD.ToString()));
-                    result3.Add(new MyTable("Последняя минута", nigger.Period3.LastMinute.AvgCSS.ToString(),
-                        nigger.Period3.LastMinute.AvgCD.ToString()));
-                    result3.Add(new MyTable(" ", " ", " "));
-
-                    result5.Add(new MyTable("Набор", nigger.Period5.Rise.AvgCSS.ToString(),
-                        nigger.Period5.Rise.AvgCD.ToString()));
-                    result5.Add(new MyTable("Площадка", nigger.Period5.Platform.AvgCSS.ToString(),
-                        nigger.Period5.Platform.AvgCD.ToString()));
-                    result5.Add(new MyTable("Спуск", nigger.Period5.Descent.AvgCSS.ToString(),
-                        nigger.Period5.Descent.AvgCD.ToString()));
-                    result5.Add(new MyTable("Первая минута", nigger.Period5.FirstMinute.AvgCSS.ToString(),
-                        nigger.Period5.FirstMinute.AvgCD.ToString()));
-                    result5.Add(new MyTable("Последняя минута", nigger.Period5.LastMinute.AvgCSS.ToString(),
-                        nigger.Period5.LastMinute.AvgCD.ToString()));
-                    result5.Add(new MyTable(" ", " ", " "));
-
-                    result6.Add(new MyTable("Набор", nigger.Period6.Rise.AvgCSS.ToString(),
-                        nigger.Period6.Rise.AvgCD.ToString()));
-                    result6.Add(new MyTable("Площадка", nigger.Period6.Platform.AvgCSS.ToString(),
-                        nigger.Period6.Platform.AvgCD.ToString()));
-                    result6.Add(new MyTable("Спуск", nigger.Period6.Descent.AvgCSS.ToString(),
-                        nigger.Period6.Descent.AvgCD.ToString()));
-                    result6.Add(new MyTable("Первая минута", nigger.Period6.FirstMinute.AvgCSS.ToString(),
-                        nigger.Period6.FirstMinute.AvgCD.ToString()));
-                    result6.Add(new MyTable("Последняя минута", nigger.Period6.LastMinute.AvgCSS.ToString(),
-                        nigger.Period6.LastMinute.AvgCD.ToString()));
-                    result6.Add(new MyTable(" ", " ", " "));
-
-                    fooresult.Add(new foo() {NamePilot = file.Family, G3 = result3, G5 = result5, G6 = result6});
-
-
-                    if (val == max)
-                    {
-                        Dispatcher.Invoke(() => ProgressGrid.Visibility = Visibility.Hidden);
-                        Dispatcher.Invoke(() => GridProducts.ItemsSource = fooresult);
-                        Dispatcher.Invoke(() => GridProducts.Items.Refresh());
-                    }
-
-
+                    ByteToObject(data, packet);
+                    dateTime = DateTime.FromOADate(packet.Time);
+                    if (packet.G > 2.8 && packet.G < 3.1)
+                        FindIntervals3(nigger.Period3, packet);
+                    if (packet.G > 4.8 && packet.G < 5.1)
+                        FindIntervals5(nigger.Period5, nigger.Period3, packet);
+                    if (packet.G > 5.8 && packet.G < 6.1)
+                        FindIntervals6(nigger.Period6, nigger.Period5, packet);
                 }
 
 
+                for (long ix = pos; ix < len; ix += 288)
+                {
+                    byte[] data = new byte[144];
+                    DataPacket packet = new DataPacket();
+                    Array.Copy(bytes, ix, data, 0, 144);
+                    ByteToObject(data, packet);
+                    dateTime = DateTime.FromOADate(packet.Time);
+                    AddPacketToInterval(nigger.Period3, packet, dateTime);
+                    AddPacketToInterval(nigger.Period5, packet, dateTime);
+                    AddPacketToInterval(nigger.Period6, packet, dateTime);
+                }
 
-            });
-            GC.Collect();
+                bytes = null;
+
+                nigger.Period3.CalcAvg();
+                nigger.Period5.CalcAvg();
+                nigger.Period6.CalcAvg();
+
+                List<Interval> result3 = new List<Interval>();
+                List<Interval> result5 = new List<Interval>();
+                List<Interval> result6 = new List<Interval>();
+
+                FillCollection(result3, nigger.Period3);
+                FillCollection(result5, nigger.Period5);
+                FillCollection(result6, nigger.Period6);
+
+                fooresult.Add(new foo()
+                {
+                    NamePilot = file.Family + " " + file.Name + " " + file.Lastname,
+                    PathFile = file.Path,
+                    G3 = result3,
+                    G5 = result5,
+                    G6 = result6
+                });
+
+                OnProgressDEvent(0);
+            }
         }
 
-        private static int GetPos(byte[] bytes)
+        private void FillCollection(List<Interval> result, Periods period)
+        {
+            FillItemOfCollection(result, period.Rise,"Набор");
+            FillItemOfCollection(result, period.Platform, "Площадка");
+            FillItemOfCollection(result, period.Descent, "Спуск");
+            FillItemOfCollection(result, period.FirstMinute, "Первая минута");
+            FillItemOfCollection(result, period.LastMinute, "Последняя минута");
+        }
+
+        private void FillItemOfCollection(List<Interval> result, Interval interval, string modeName)
+        {
+
+            result.Add(new Interval()
+            {
+                ModeName = modeName,
+                AvgCss = interval.AvgCss,
+                AvgCd = interval.AvgCd,
+                AvgAds = interval.AvgAds,
+                AvgAdd = interval.AvgAdd,
+                AvgAdu = interval.AvgAdu,
+                MedianCss = interval.MedianCss,
+                MedianCd = interval.MedianCd,
+                MedianAds = interval.MedianAds,
+                MedianAdd = interval.MedianAdd,
+                MedianAdu = interval.MedianAdu
+            });
+        }
+
+        private int GetPos(byte[] bytes)
         {
             var pos = 1422;
             var offset = BitConverter.ToInt32(bytes, 1422);
@@ -222,7 +180,7 @@ namespace CentrifugeDataProcessing
             return pos;
         }
 
-        private static void FindIntervals3(Periods period, DataPacket packet)
+        private void FindIntervals3(Periods period, DataPacket packet)
         {
             var dateTime = DateTime.FromOADate(packet.Time);
 
@@ -244,7 +202,7 @@ namespace CentrifugeDataProcessing
             }
         }
 
-        private static void FindIntervals5(Periods currReriod, Periods prevReriod, DataPacket packet)
+        private void FindIntervals5(Periods currReriod, Periods prevReriod, DataPacket packet)
         {
             var dateTime = DateTime.FromOADate(packet.Time);
 
@@ -269,7 +227,7 @@ namespace CentrifugeDataProcessing
             }
         }
 
-        private static void FindIntervals6(Periods currReriod, Periods prevReriod, DataPacket packet)
+        private void FindIntervals6(Periods currReriod, Periods prevReriod, DataPacket packet)
         {
             var dateTime = DateTime.FromOADate(packet.Time);
 
@@ -297,7 +255,7 @@ namespace CentrifugeDataProcessing
             }
         }
 
-        private static void AddPacketToInterval(Periods period, DataPacket packet, DateTime dateTime)
+        private void AddPacketToInterval(Periods period, DataPacket packet, DateTime dateTime)
         {
             if ((dateTime >= period.Rise.Begin) && (dateTime <= period.Rise.End))
             {
@@ -325,7 +283,7 @@ namespace CentrifugeDataProcessing
             }
         }
 
-        public static void ByteToObject<T>(byte[] receiveBytes, T obj)
+        public void ByteToObject<T>(byte[] receiveBytes, T obj)
         {
             int len = Marshal.SizeOf(obj);
             IntPtr i = Marshal.AllocHGlobal(len);
@@ -382,9 +340,43 @@ namespace CentrifugeDataProcessing
             {
                 OnScrollUp();
             }
+        }
 
+        public delegate void ProgressD(int idx);
+        public static event ProgressD ProgressDEvent;
 
+        public static void OnProgressDEvent(int idx)
+        {
+            ProgressDEvent?.Invoke(idx);
+        }
 
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        private void ViewNigger_OnClick(object sender, RoutedEventArgs e)
+        {
+            var path = ((Button) sender).Tag;
+            
+
+        }
+
+        private void SaveNigger_OnClick(object sender, RoutedEventArgs e)
+        {
+            var path = ((Button)sender).Tag;
+            var name = ((Button)sender).Uid;
+
+            foreach (var foor in fooresult)
+            {
+                 
+                if (name== foor.NamePilot)
+                {
+                    var tfoor = 0;
+                }
+            }
+
+            
         }
     }
 }
