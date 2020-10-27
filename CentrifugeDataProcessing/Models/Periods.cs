@@ -47,9 +47,12 @@ namespace CentrifugeDataProcessing.Models
             {
                 lstCss.Add(item.CSS);
                 lstCd.Add(item.CD);
-                lstAds.Add(item.ADS);
-                lstAdu.Add(item.ADU);
-                lstAdd.Add(item.ADD);
+                if (item.ADS > 0)
+                    lstAds.Add(item.ADS);
+                if (item.ADU > 0)
+                    lstAdu.Add(item.ADU);
+                if (item.ADD > 0)
+                    lstAdd.Add(item.ADD);
             }
             interval.MedianCss = (int)lstCss.Median();
             interval.MedianCd = (int)lstCd.Median();
@@ -77,10 +80,14 @@ namespace CentrifugeDataProcessing.Models
             {
                 lstCss.Add(item.CSS);
                 lstCd.Add(item.CD);
-                lstAds.Add(item.PADU);
-                lstAdu.Add(item.ADU);
-                lstAdd.Add(item.ADD);
+                if (item.ADS > 0)
+                    lstAds.Add(item.ADS);
+                if (item.ADU > 0)
+                    lstAdu.Add(item.ADU);
+                if (item.ADD > 0)
+                    lstAdd.Add(item.ADD);
             }
+
             interval.AvgCss = (int)lstCss.Average();
             interval.AvgCd = (int)lstCd.Average();
             interval.AvgAds = (int)lstAds.Average();

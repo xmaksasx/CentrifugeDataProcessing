@@ -44,9 +44,9 @@ namespace CentrifugeDataProcessing.Models
         int TP;
         public int CSS; // ЧСС
         public int CD; // Частота дыхания
-        public float ADS; // ушное давление но это не точно
+        public float ADS; // артериальное давление систолическим (АДс)
         int ADSIzmPos;
-        public float ADD; //давление
+        public float ADD; // артериальное давление диастолическим (АДд)
         int ADDIzmPos;
         public float ADU;//давление
         int ADUIzmPos;

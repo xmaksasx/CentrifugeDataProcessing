@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using CentrifugeDataProcessing.Annotations;
 using CentrifugeDataProcessing.Models;
+using MaterialDesignThemes.Wpf;
+using ServiceStack.Text;
 
 
 namespace CentrifugeDataProcessing
@@ -39,13 +35,13 @@ namespace CentrifugeDataProcessing
             _niggers = new List<Nigger>();
             InitializeComponent();
             ProgressLoad.Maximum = ilst.Count-1;
-            ProgressDEvent += ProgressDE;
+            ProgressDEvent += ProgressDe;
             Task.Run(() => Parallel.ForEach(_ilst, new ParallelOptions() { MaxDegreeOfParallelism = 20 }, d => { Simulation(d); }));
          
 
         }
 
-        private void ProgressDE(int idx)
+        private void ProgressDe(int idx)
         {
 
             double max = 0;
@@ -60,6 +56,8 @@ namespace CentrifugeDataProcessing
             {
                 Dispatcher.Invoke(() => ProgressGrid.Visibility = Visibility.Hidden);
                 Dispatcher.Invoke(() => GridProducts.ItemsSource = fooresult);
+                Dispatcher.Invoke(() => Save.IsEnabled = true);
+
             }
         }
 
@@ -358,8 +356,8 @@ namespace CentrifugeDataProcessing
         private void ViewNigger_OnClick(object sender, RoutedEventArgs e)
         {
             var path = ((Button) sender).Tag;
-            
-
+            var vd = new ViewerData();
+            vd.ShowDialog();
         }
 
         private void SaveNigger_OnClick(object sender, RoutedEventArgs e)
@@ -372,11 +370,38 @@ namespace CentrifugeDataProcessing
                  
                 if (name== foor.NamePilot)
                 {
-                    var tfoor = 0;
+
+                    CsvConfig.ItemSeperatorString = ";";
+                    string g3 = CsvSerializer.SerializeToString(foor.G3);
+                    string g5 = CsvSerializer.SerializeToString(foor.G5);
+                    string g6 = CsvSerializer.SerializeToString(foor.G6);
+
+
+                    File.WriteAllText("wer.csv", g3+"\r\n"+ g5 + "\r\n" + g6, Encoding.UTF8);
+
                 }
             }
+        }
 
+        private void Save_OnClick(object sender, RoutedEventArgs e)
+        {
+            StreamWriter sw = new StreamWriter("werAll.csv",false, Encoding.UTF8);
+
+            foreach (var foor in fooresult)
+            {
+
+
+
+                CsvConfig.ItemSeperatorString = ";";
+                string g3 = CsvSerializer.SerializeToString(foor.G3);
+                string g5 = CsvSerializer.SerializeToString(foor.G5);
+                string g6 = CsvSerializer.SerializeToString(foor.G6);
+
+                sw.WriteLine(g3 + " " + g5 + " " + g6);
             
+            }
+            //  Text("werAll.csv", g3 + " " + g5 + " " + g6, Encoding.UTF8);
+            sw.Close();
         }
     }
 }

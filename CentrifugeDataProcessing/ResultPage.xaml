@@ -41,8 +41,24 @@
                     Height="30"
                     Kind="Close" />
             </Button>
-        </Grid>
 
+            <Button
+                x:Name="Save"
+                Width="30"
+                Height="30"
+                Margin="10,0,5,0"
+                Padding="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Click="Save_OnClick"
+                IsEnabled="False"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <materialDesign:PackIcon
+                    Width="30"
+                    Height="30"
+                    Kind="ContentSaveAll" />
+            </Button>
+        </Grid>
         <Grid Margin="0,40,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -193,6 +209,7 @@
                                             CanUserAddRows="False"
                                             HeadersVisibility="All"
                                             ItemsSource="{Binding G5}"
+                                            PreviewMouseWheel="ListView_PreviewMouseWheel"
                                             VirtualizingStackPanel.IsVirtualizing="true">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding ModeName}" Header="Режим" />
@@ -244,6 +261,7 @@
                                             CanUserAddRows="False"
                                             HeadersVisibility="All"
                                             ItemsSource="{Binding G6}"
+                                            PreviewMouseWheel="ListView_PreviewMouseWheel"
                                             VirtualizingStackPanel.IsVirtualizing="true">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding ModeName}" Header="Режим" />
@@ -296,149 +314,6 @@
 
             </ScrollViewer>
         </Grid>
-
-
-        <!--<ListView
-            x:Name="GridProducts"
-            Margin="0,40,0,0"
-            VirtualizingPanel.ScrollUnit="Pixel">
-
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="300" Header="3G">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    CanUserAddRows="False"
-                                    HeadersVisibility="All"
-                                    ItemsSource="{Binding G3}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn
-                                            Binding="{Binding ModeName}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="Name" />
-
-                                        <DataGridTextColumn
-                                            Binding="{Binding Css}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="ЧСС" />
-
-                                        <DataGridTextColumn
-                                            Binding="{Binding Cd}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="Дыхание" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-
-        -->
-        <!--<ListView ItemsSource="{Binding G3}" PreviewMouseWheel="ListView_PreviewMouseWheel">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn DisplayMemberBinding="{Binding ModeName}" Header="Name" />
-                                            <GridViewColumn DisplayMemberBinding="{Binding Css}" Header="ЧСС" />
-                                            <GridViewColumn DisplayMemberBinding="{Binding Cd}" Header="Дыхание" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>-->
-        <!--
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="300" Header="5G">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    CanUserAddRows="False"
-                                    HeadersVisibility="All"
-                                    ItemsSource="{Binding G5}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn
-                                            Binding="{Binding ModeName}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="Name" />
-
-                                        <DataGridTextColumn
-                                            Binding="{Binding Css}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="ЧСС" />
-
-                                        <DataGridTextColumn
-                                            Binding="{Binding Cd}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                           Header="Дыхание" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-
-
-
-        -->
-        <!--<ListView ItemsSource="{Binding G5}" PreviewMouseWheel="ListView_PreviewMouseWheel">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn DisplayMemberBinding="{Binding ModeName}" Header="Name" />
-                                            <GridViewColumn DisplayMemberBinding="{Binding Css}" Header="ЧСС" />
-                                            <GridViewColumn DisplayMemberBinding="{Binding Cd}" Header="Дыхание" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>-->
-        <!--
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Width="300" Header="6G">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <DataGrid
-                                    AutoGenerateColumns="False"
-                                    CanUserAddRows="False"
-                                    HeadersVisibility="All"
-                                    ItemsSource="{Binding G6}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn
-                                            Binding="{Binding ModeName}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="Name" />
-
-                                        <DataGridTextColumn
-                                            Binding="{Binding Css}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="ЧСС" />
-
-                                        <DataGridTextColumn
-                                            Binding="{Binding Cd}"
-                                            EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
-                                            ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
-                                            Header="Дыхание" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
-
-        -->
-        <!--<ListView ItemsSource="{Binding G6}" PreviewMouseWheel="ListView_PreviewMouseWheel">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn DisplayMemberBinding="{Binding ModeName}" Header="Name" />
-                                            <GridViewColumn DisplayMemberBinding="{Binding Css}" Header="ЧСС" />
-                                            <GridViewColumn DisplayMemberBinding="{Binding Cd}" Header="Дыхание" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>-->
-        <!--
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>-->
         <Grid
             x:Name="ProgressGrid"
             Margin="0,40,0,0"
