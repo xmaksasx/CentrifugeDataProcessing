@@ -7,129 +7,125 @@
     xmlns:local="clr-namespace:CentrifugeDataProcessing"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="450"
-    d:DesignWidth="1000"
+    Title="ResultPage"
+    Width="1200"
+    Height="600"
     Background="#FF252526"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
     mc:Ignorable="d">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Height="40"
+            VerticalAlignment="Top"
+            Background="#FF1E1E1E"
+            MouseDown="Grid_MouseDown">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="18"
+                Foreground="{StaticResource PrimaryHueDarkForegroundBrush}"
+                Text="Результаты обработки данных" />
+
+            <Button
+                Width="30"
+                Height="30"
+                Margin="0,0,5,0"
+                Click="Close_OnClick"
+                Padding="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <materialDesign:PackIcon
+                    Width="30"
+                    Height="30"
+                    Kind="Close" />
+            </Button>
+
+
+        </Grid>
         <d3:ChartPlotter
             x:Name="Plotter"
-            Grid.Column="0"
-            Margin="155,0,0,2"
-            Background="Gray"
-            RenderTransformOrigin="0.0,0.5">
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="5"
+            Background="Gray">
             <d3:HorizontalTimeSpanAxis x:Name="SpanAxis" />
+            <d3:CursorCoordinateGraph/>
+            <d3:AxisCursorGraph/>
+            <d3:MouseNavigation />
         </d3:ChartPlotter>
         <StackPanel
-            Width="150"
-            Height="419"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top">
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="5">
+            <materialDesign:Flipper Margin="2">
+                <materialDesign:Flipper.FrontContent>
+                    <Button
+                        Uid="GSource"
+                        Click="AddGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Перегрузка!"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Button
+                        Uid="GSource"
+                        Click="RemoveGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Очистить"
+                        Style="{StaticResource MaterialDesignFlatDarkBgButton}" />
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
+            <materialDesign:Flipper Margin="2">
+                <materialDesign:Flipper.FrontContent>
+                    <Button
+                        Uid="CssSource"
+                        Click="AddGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="ЧСС"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Button
+                        Uid="CssSource"
+                        Click="RemoveGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Очистить"
+                        Style="{StaticResource MaterialDesignFlatDarkBgButton}" />
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
 
             <materialDesign:Flipper Margin="2">
                 <materialDesign:Flipper.FrontContent>
                     <Button
+                        Uid="CdSource"
+                        Click="AddGraph_OnClick"
                         Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="FLIPPABLZ!"
+                        Content="Дыхание"
                         Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </materialDesign:Flipper.FrontContent>
                 <materialDesign:Flipper.BackContent>
                     <Button
+                        Uid="CdSource"
+                        Click="RemoveGraph_OnClick"
                         Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="GO BACK"
-                        Style="{StaticResource MaterialDesignOutlinedButton}" />
-                </materialDesign:Flipper.BackContent>
-            </materialDesign:Flipper>
-            <materialDesign:Flipper Grid.Row="1" Margin="2">
-                <materialDesign:Flipper.FrontContent>
-                    <Button
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="FLIPPABLZ!"
-                        Style="{StaticResource MaterialDesignOutlinedButton}" />
-                </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <Button
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="GO BACK"
-                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                        Content="Очистить"
+                        Style="{StaticResource MaterialDesignFlatDarkBgButton}" />
                 </materialDesign:Flipper.BackContent>
             </materialDesign:Flipper>
         </StackPanel>
-        <!--<StackPanel Margin="0,0,905,0">
-            <materialDesign:Flipper Padding="0" Style="{StaticResource MaterialDesignCardFlipper}" >
-                <materialDesign:Flipper.FrontContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        >
-                        <Grid>
-                            <TextBlock FontSize="8">Перегрузка</TextBlock>
-                        </Grid>
-                    </Button>
-                </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="GO BACK" />
-                </materialDesign:Flipper.BackContent>
-            </materialDesign:Flipper>
-
-            <materialDesign:Flipper Padding="0" Style="{StaticResource MaterialDesignCardFlipper}">
-                <materialDesign:Flipper.FrontContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="FLIPPABLZ!" />
-                </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="GO BACK" />
-                </materialDesign:Flipper.BackContent>
-            </materialDesign:Flipper>
-
-            <materialDesign:Flipper Padding="0" Style="{StaticResource MaterialDesignCardFlipper}">
-                <materialDesign:Flipper.FrontContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="FLIPPABLZ!" />
-                </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="GO BACK" />
-                </materialDesign:Flipper.BackContent>
-            </materialDesign:Flipper>
-
-
-            <materialDesign:Flipper Padding="0" Style="{StaticResource MaterialDesignCardFlipper}">
-                <materialDesign:Flipper.FrontContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="FLIPPABLZ!" />
-                </materialDesign:Flipper.FrontContent>
-                <materialDesign:Flipper.BackContent>
-                    <Button
-                        Width="80"
-                        Height="30"
-                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                        Content="GO BACK" />
-                </materialDesign:Flipper.BackContent>
-            </materialDesign:Flipper>
-
-        </StackPanel>-->
     </Grid>
 
 </Window>

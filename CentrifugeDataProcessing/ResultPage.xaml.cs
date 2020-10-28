@@ -12,7 +12,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using CentrifugeDataProcessing.Models;
-using MaterialDesignThemes.Wpf;
 using ServiceStack.Text;
 
 
@@ -355,8 +354,8 @@ namespace CentrifugeDataProcessing
 
         private void ViewNigger_OnClick(object sender, RoutedEventArgs e)
         {
-            var path = ((Button) sender).Tag;
-            var vd = new ViewerData();
+            var path = ((Button) sender).Tag.ToString();
+            var vd = new ViewerData(path);
             vd.ShowDialog();
         }
 
