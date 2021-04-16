@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:CentrifugeDataProcessing"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    Title="MainWindow"
+    Title="Обработка данных"
     Width="400"
     Height="500"
     ResizeMode="NoResize"
@@ -17,7 +17,7 @@
         <Grid
             Height="40"
             VerticalAlignment="Top"
-            Background="#FF1E1E1E">
+            Background="#FF1E1E1E" MouseLeftButtonDown="Grid_MouseLeftButtonDown" >
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

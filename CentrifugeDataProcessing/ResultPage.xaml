@@ -1,364 +1,140 @@
 ﻿<Window
-    x:Class="CentrifugeDataProcessing.ResultPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CentrifugeDataProcessing"
-    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="ResultPage"
-    Height="768"
-    MinWidth="1024"
-    ResizeMode="NoResize"
-    SizeToContent="Width"
-    WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
-    mc:Ignorable="d">
-    <Grid Background="#FF252526">
-        <Grid
-            Height="40"
-            VerticalAlignment="Top"
-            Background="#FF1E1E1E"
-            MouseDown="Grid_MouseDown">
-            <TextBlock
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="18"
-                Foreground="{StaticResource PrimaryHueDarkForegroundBrush}"
-                Text="Результаты обработки данных" />
+	x:Class="CentrifugeDataProcessing.ResultPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:CentrifugeDataProcessing"
+	xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Title="ResultPage"
+	Height="800"
+	MinWidth="600"
+	ResizeMode="NoResize"
+	SizeToContent="Width"
+	WindowStartupLocation="CenterScreen"
+	WindowStyle="None"
+	mc:Ignorable="d" Closing="Window_Closing">
+	<Grid Background="#FF252526">
+		<Grid
+			Height="40"
+			VerticalAlignment="Top"
+			Background="#FF1E1E1E"
+			MouseDown="Grid_MouseDown">
+			<TextBlock
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				FontSize="18"
+				Foreground="{StaticResource PrimaryHueDarkForegroundBrush}"
+				Text="Результаты обработки данных" />
+			<Button
+				Width="30"
+				Height="30"
+				Margin="0,0,5,0"
+				Padding="0"
+				HorizontalAlignment="Right"
+				VerticalAlignment="Center"
+				Click="Close_OnClick"
+				Style="{StaticResource MaterialDesignFlatButton}">
+				<materialDesign:PackIcon
+					Width="30"
+					Height="30"
+					Kind="Close" />
+			</Button>
+		
 
-            <Button
-                Width="30"
-                Height="30"
-                Margin="0,0,5,0"
-                Padding="0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Click="Close_OnClick"
-                Style="{StaticResource MaterialDesignFlatButton}">
-                <materialDesign:PackIcon
-                    Width="30"
-                    Height="30"
-                    Kind="Close" />
-            </Button>
+			<Menu
+				Width="120"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Center"
+				Background="#FF1E1E1E">
+				<MenuItem VerticalAlignment="Center" Header="Файл">
+					<MenuItem VerticalAlignment="Center" Header="Экспорт" Click="Save_OnClick">
+					
+					</MenuItem>
+					<MenuItem VerticalAlignment="Center" Header="Выход" />
+				</MenuItem>
+			</Menu>
+		</Grid>
+		<Grid Margin="0,40,0,5">
+			<DataGrid
+				x:Name="GridProducts"
+				Margin="2"
+				AutoGenerateColumns="False"
+				CanUserAddRows="False"
+				HeadersVisibility="All"
+				IsReadOnly="True"
+				VirtualizingStackPanel.IsVirtualizing="true">
+				<DataGrid.Columns>
+					<DataGridTextColumn Binding="{Binding Name}" Header="ФИО">
+						<DataGridTextColumn.ElementStyle>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="VerticalAlignment" Value="Center" />
+							</Style>
+						</DataGridTextColumn.ElementStyle>
+					</DataGridTextColumn>
+					<DataGridTextColumn Binding="{Binding Count}" Header="Количество">
+						<DataGridTextColumn.ElementStyle>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="VerticalAlignment" Value="Center" />
+								<Setter Property="HorizontalAlignment" Value="Center" />
+							</Style>
+						</DataGridTextColumn.ElementStyle>
+					</DataGridTextColumn>
+					<DataGridTemplateColumn Header="Дополнительно">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<Button Click="ButtonBase_OnClick" Style="{StaticResource MaterialDesignOutlinedButton}">Подробнее</Button>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+		<Grid
+			x:Name="ProgressGrid"
+			Margin="0,40,0,0"
+			Background="#FF252526">
+			<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
 
-            <Button
-                x:Name="Save"
-                Width="30"
-                Height="30"
-                Margin="10,0,5,0"
-                Padding="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Click="Save_OnClick"
-                IsEnabled="False"
-                Style="{StaticResource MaterialDesignFlatButton}">
-                <materialDesign:PackIcon
-                    Width="30"
-                    Height="30"
-                    Kind="ContentSaveAll" />
-            </Button>
-        </Grid>
-        <Grid Margin="0,40,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Foreground="#FFBDBDBD"
-                Text="3G" />
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Foreground="#FFBDBDBD"
-                Text="5G" />
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Foreground="#FFBDBDBD"
-                Text="6G" />
-            <ScrollViewer
-                x:Name="ScrollViewer1"
-                Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="3">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <ItemsControl x:Name="GridProducts" Grid.Row="1">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <materialDesign:Card
-                                    Margin="2"
-                                    Padding="0"
-                                    materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                                    Background="#7F015F92"
-                                    Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}"
-                                    UniformCornerRadius="6">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="40" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
-                                        <TextBlock
-                                            Grid.Row="0"
-                                            Grid.ColumnSpan="3"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            FontSize="14"
-                                            Foreground="#FFBDBDBD"
-                                            Text="{Binding NamePilot}" />
-                                        <materialDesign:PopupBox Padding="2,0,2,0">
-                                            <StackPanel>
-                                                <Button
-                                                    x:Name="ViewNigger"
-                                                    Uid="{Binding NamePilot}"
-                                                    Click="ViewNigger_OnClick"
-                                                    Content="Просмотреть"
-                                                    Tag="{Binding PathFile}" />
-                                                <Button
-                                                    x:Name="SaveNigger"
-                                                    Uid="{Binding NamePilot}"
-                                                    Click="SaveNigger_OnClick"
-                                                    Content="Сохранить"
-                                                    Tag="{Binding PathFile}" />
-                                            </StackPanel>
-                                        </materialDesign:PopupBox>
-                                        <DataGrid
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Margin="2"
-                                            AutoGenerateColumns="False"
-                                            CanUserAddRows="False"
-                                            HeadersVisibility="All"
-                                            IsReadOnly="True"
-                                            ItemsSource="{Binding G3}"
-                                            PreviewMouseWheel="ListView_PreviewMouseWheel"
-                                            VirtualizingStackPanel.IsVirtualizing="true">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Binding="{Binding ModeName}" Header="Режим" />
-
-                                                <DataGridTextColumn Binding="{Binding AvgCss}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="ЧСС" />
-                                                            <TextBlock Text="Среднее" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-                                                <DataGridTextColumn Binding="{Binding AvgCd}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="Дыхание" />
-                                                            <TextBlock Text="Среднее" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-
-                                                <DataGridTextColumn Binding="{Binding MedianCss}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="ЧСС" />
-                                                            <TextBlock Text="Медиана" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-
-                                                <DataGridTextColumn Binding="{Binding MedianCd}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="Дыхание" />
-                                                            <TextBlock Text="Медиана" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                        <DataGrid
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Margin="2"
-                                            AutoGenerateColumns="False"
-                                            CanUserAddRows="False"
-                                            HeadersVisibility="All"
-                                            ItemsSource="{Binding G5}"
-                                            PreviewMouseWheel="ListView_PreviewMouseWheel"
-                                            VirtualizingStackPanel.IsVirtualizing="true">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Binding="{Binding ModeName}" Header="Режим" />
-
-                                                <DataGridTextColumn Binding="{Binding AvgCss}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="ЧСС" />
-                                                            <TextBlock Text="Среднее" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-                                                <DataGridTextColumn Binding="{Binding AvgCd}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="Дыхание" />
-                                                            <TextBlock Text="Среднее" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-
-                                                <DataGridTextColumn Binding="{Binding MedianCss}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="ЧСС" />
-                                                            <TextBlock Text="Медиана" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-
-                                                <DataGridTextColumn Binding="{Binding MedianCd}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="Дыхание" />
-                                                            <TextBlock Text="Медиана" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                        <DataGrid
-                                            Grid.Row="1"
-                                            Grid.Column="2"
-                                            Margin="2"
-                                            AutoGenerateColumns="False"
-                                            CanUserAddRows="False"
-                                            HeadersVisibility="All"
-                                            ItemsSource="{Binding G6}"
-                                            PreviewMouseWheel="ListView_PreviewMouseWheel"
-                                            VirtualizingStackPanel.IsVirtualizing="true">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Binding="{Binding ModeName}" Header="Режим" />
-
-                                                <DataGridTextColumn Binding="{Binding AvgCss}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="ЧСС" />
-                                                            <TextBlock Text="Среднее" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-                                                <DataGridTextColumn Binding="{Binding AvgCd}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="Дыхание" />
-                                                            <TextBlock Text="Среднее" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-
-                                                <DataGridTextColumn Binding="{Binding MedianCss}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="ЧСС" />
-                                                            <TextBlock Text="Медиана" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-
-
-                                                <DataGridTextColumn Binding="{Binding MedianCd}">
-                                                    <DataGridTextColumn.Header>
-                                                        <StackPanel>
-                                                            <TextBlock Text="Дыхание" />
-                                                            <TextBlock Text="Медиана" />
-                                                        </StackPanel>
-                                                    </DataGridTextColumn.Header>
-                                                </DataGridTextColumn>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </Grid>
-                                </materialDesign:Card>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Grid>
-
-            </ScrollViewer>
-        </Grid>
-        <Grid
-            x:Name="ProgressGrid"
-            Margin="0,40,0,0"
-            Background="#FF252526">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <ProgressBar
-                    x:Name="ProgressLoad"
-                    Width="400"
-                    Height="30"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Value="0" />
-                <StackPanel
-                    Grid.Row="1"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        Foreground="#FFBDBDBD"
-                        Text="Обработанно" />
-                    <TextBlock
-                        x:Name="CurrentFile"
-                        Margin="5,0,2,0"
-                        VerticalAlignment="Center"
-                        Foreground="#FFBDBDBD"
-                        Text="0" />
-                    <TextBlock
-                        Margin="3,0,5,0"
-                        VerticalAlignment="Center"
-                        Foreground="#FFBDBDBD"
-                        Text="из" />
-                    <TextBlock
-                        x:Name="MaximumFile"
-                        VerticalAlignment="Center"
-                        Foreground="#FFBDBDBD"
-                        Text="0" />
-                </StackPanel>
-            </Grid>
-        </Grid>
-    </Grid>
+				<ProgressBar
+					x:Name="ProgressLoad"
+					Width="400"
+					Height="30"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Value="0" />
+				<StackPanel
+					Grid.Row="1"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Center"
+					Orientation="Horizontal">
+					<TextBlock
+						VerticalAlignment="Center"
+						FontSize="14"
+						Foreground="#FFBDBDBD"
+						Text="Обработанно" />
+					<TextBlock
+						x:Name="CurrentFile"
+						Margin="5,0,2,0"
+						VerticalAlignment="Center"
+						Foreground="#FFBDBDBD"
+						Text="0" />
+					<TextBlock
+						Margin="3,0,5,0"
+						VerticalAlignment="Center"
+						Foreground="#FFBDBDBD"
+						Text="из" />
+					<TextBlock
+						x:Name="MaximumFile"
+						VerticalAlignment="Center"
+						Foreground="#FFBDBDBD"
+						Text="0" />
+				</StackPanel>
+			</Grid>
+		</Grid>
+	</Grid>
 </Window>

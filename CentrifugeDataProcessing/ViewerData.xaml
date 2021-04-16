@@ -125,6 +125,43 @@
                         Style="{StaticResource MaterialDesignFlatDarkBgButton}" />
                 </materialDesign:Flipper.BackContent>
             </materialDesign:Flipper>
+            <materialDesign:Flipper Margin="2">
+                <materialDesign:Flipper.FrontContent>
+                    <Button
+                        Uid="AddSource"
+                        Click="AddGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Давление Д"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Button
+                        Uid="AddSource"
+                        Click="RemoveGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Очистить"
+                        Style="{StaticResource MaterialDesignFlatDarkBgButton}" />
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
+
+            <materialDesign:Flipper Margin="2">
+                <materialDesign:Flipper.FrontContent>
+                    <Button
+                        Uid="AdsSource"
+                        Click="AddGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Давление С"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </materialDesign:Flipper.FrontContent>
+                <materialDesign:Flipper.BackContent>
+                    <Button
+                        Uid="AdsSource"
+                        Click="RemoveGraph_OnClick"
+                        Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                        Content="Очистить"
+                        Style="{StaticResource MaterialDesignFlatDarkBgButton}" />
+                </materialDesign:Flipper.BackContent>
+            </materialDesign:Flipper>
         </StackPanel>
     </Grid>
 

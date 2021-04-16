@@ -58,7 +58,14 @@ namespace CentrifugeDataProcessing
                         var str = reader.ReadBytes(lengthStr);
 
 
-                        lst.Add( new FileCentrifugeInfo(){ Family=family , Name= name, Lastname= lastname, Path = file});
+                        var birthdate = DateTime.FromOADate(birthday);
+                        var today = DateTime.Today;
+                        var age = today.Year - birthdate.Year;
+                        if (birthdate.Date > today.AddYears(-age)) age--;
+
+                        if(age>20)
+                            Console.WriteLine(age);
+                        lst.Add( new FileCentrifugeInfo(){ Family=family , Name= name, Lastname= lastname, Path = file, Age = age });
                     }
                 }
         }
@@ -86,12 +93,18 @@ namespace CentrifugeDataProcessing
         {
            Close();
         }
+
+        private void Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
     public class FileCentrifugeInfo
     {
         public string Name { get; set; }
         public string Family { get; set; }
         public string Lastname { get; set; }
+        public int Age { get; set; }
         public string Path { get; set; }
 
     }

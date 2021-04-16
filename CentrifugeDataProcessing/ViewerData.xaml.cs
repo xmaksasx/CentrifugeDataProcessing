@@ -66,8 +66,8 @@ namespace CentrifugeDataProcessing
         List<TimeParam> GSource = new List<TimeParam>();
         List<TimeParam> CssSource = new List<TimeParam>();
         List<TimeParam> CdSource = new List<TimeParam>();
-        List<TimeParam> source3 = new List<TimeParam>();
-        List<TimeParam> source4 = new List<TimeParam>();
+        List<TimeParam> AddSource = new List<TimeParam>();
+        List<TimeParam> AdsSource = new List<TimeParam>();
         List<TimeParam> source5 = new List<TimeParam>();
         List<TimeParam> source6 = new List<TimeParam>();
 
@@ -80,7 +80,7 @@ namespace CentrifugeDataProcessing
                 var bytes = File.ReadAllBytes(path);
                 var len = bytes.Length;
                 var pos = GetPos(bytes);
-                for (long ix = pos; ix < len; ix += 5760)
+                for (long ix = pos; ix < len; ix += 144)
                 {
                     byte[] data = new byte[144];
                     DataPacket packet = new DataPacket();
@@ -94,6 +94,8 @@ namespace CentrifugeDataProcessing
                         GSource.Add(new TimeParam(packet.G, y));
                         CssSource.Add(new TimeParam(packet.CSS, y));
                         CdSource.Add(new TimeParam(packet.CD, y));
+                        AddSource.Add(new TimeParam(packet.ADD, y));
+                        AdsSource.Add(new TimeParam(packet.ADS, y));
                     }
                 }
 
@@ -129,8 +131,12 @@ namespace CentrifugeDataProcessing
                 case "CdSource":
                     ods.AppendMany(CdSource);
                     break;
-
-
+                case "AddSource":
+                    ods.AppendMany(AddSource);
+                    break;
+                case "AdsSource":
+                    ods.AppendMany(AdsSource);
+                    break;
             }
         }
 
